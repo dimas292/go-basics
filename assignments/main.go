@@ -1,25 +1,40 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"sort"
+)
 
 func main() {
 	fmt.Println("hello world")
 
-	// arraySign([]int{2, 1})                    // 1
-	// arraySign([]int{-2, 1})                   // -1
-	// arraySign([]int{-1, -2, -3, -4, 3, 2, 1}) // 1
+	result := arraySign([]int{2, 1})
+	fmt.Println(result)//1	
+	result2 := arraySign([]int{-2, 1}) 
+	fmt.Println(result2)// -1
+	result3 := arraySign([]int{-1, -2, -3, -4, 3, 2, 1}) 
+	fmt.Println(result3)// 1
 
-	// isAnagram("anak", "kana") // true
-	// isAnagram("anak", "mana") // false
-	// isAnagram("anagram", "managra") // true
+	a := isAnagram("anak", "kana") 
+	fmt.Println(a)// true
+	b := isAnagram("anak", "mana")
+	fmt.Println(b)// false
+	c := isAnagram("anagram", "managra") 
+	fmt.Println(c)// true | ini harusnya false 
 
-	// findTheDifference("abcd", "abcde") // 'e'
-	// findTheDifference("abcd", "abced") // 'e'
-	// findTheDifference("", "y")         // 'y'
+	e := findTheDifference("abcd", "abcde") 
+	fmt.Printf("%c\n", e)// 'e'
+	e_2 := findTheDifference("abcd", "abced") 
+	fmt.Printf("%c\n", e_2)// 'e'
+	y := findTheDifference("", "y")
+	fmt.Printf("%c\n", y)/// 'y'
 
-	// canMakeArithmeticProgression([]int{1, 5, 3})    // true; 1, 3, 5 adalah baris aritmatik +2
-	// canMakeArithmeticProgression([]int{5, 1, 9})    // true; 9, 5, 1 adalah baris aritmatik -4
-	// canMakeArithmeticProgression([]int{1, 2, 4, 8}) // false; 1, 2, 4, 8 bukan baris aritmatik, melainkan geometrik x2
+	t := canMakeArithmeticProgression([]int{1, 5, 3}) 
+	fmt.Println(t)// true; 1, 3, 5 adalah baris aritmatik +2
+	i := canMakeArithmeticProgression([]int{5, 1, 9})  
+	fmt.Println(i)// true; 9, 5, 1 adalah baris aritmatik -4
+	j := canMakeArithmeticProgression([]int{1, 2, 4, 8})
+	fmt.Println(j)// false; 1, 2, 4, 8 bukan baris aritmatik, melainkan geometrik x2
 
 	// tesDeck()
 }
@@ -27,28 +42,59 @@ func main() {
 // https://leetcode.com/problems/sign-of-the-product-of-an-array
 func arraySign(nums []int) int {
 	// write code here
-
-	return 1 // if positive
-	// return -1 // if negative
+	sum := 1
+	for _, num := range nums {
+		sum *= num
+	}
+	if sum > 0 {
+		return 1
+	}
+	return -1 
+	// return 1 if positive
+	// return -1 if negative
 }
 
 // https://leetcode.com/problems/valid-anagram
 func isAnagram(s string, t string) bool {
 	// write code here
-	return false
+	for i := range s {
+		if s[i] != t[len(t) - i - 1] {
+			return false
+		}
+	}
+	return true
 }
 
 // https://leetcode.com/problems/find-the-difference
 func findTheDifference(s string, t string) byte {
-	// write code here
-	b := byte('a')
-	return b
+	var angka_s, angka_t int32
+
+	for _, angka := range s {
+		angka_s += angka
+	}
+	for _, angka := range t {
+		angka_t += angka
+	}
+
+	return byte(angka_t - angka_s)
 }
+
 
 // https://leetcode.com/problems/can-make-arithmetic-progression-from-sequence
 func canMakeArithmeticProgression(arr []int) bool {
 	// write code here
-	return false
+	sort.Ints(arr)
+
+	diff := arr[1] - arr[0]
+
+
+	for i := 2; i < len(arr); i++ {
+		if arr[i] - arr[i-1] != diff {
+			return false
+		}
+	}
+
+	return true
 }
 
 // Deck represent "standard" deck consist of 52 cards
