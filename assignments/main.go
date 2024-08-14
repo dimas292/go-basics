@@ -3,40 +3,35 @@ package main
 import (
 	"fmt"
 	"sort"
+	"math/rand"
+	"time"
 )
 
 func main() {
 	fmt.Println("hello world")
+	
+	fmt.Println(arraySign([]int{2, 1}))//1	
+	fmt.Println(arraySign([]int{-2, 1}) )// -1
+	fmt.Println(arraySign([]int{-1, -2, -3, -4, 3, 2, 1}) )// 1
 
-	result := arraySign([]int{2, 1})
-	fmt.Println(result)//1	
-	result2 := arraySign([]int{-2, 1}) 
-	fmt.Println(result2)// -1
-	result3 := arraySign([]int{-1, -2, -3, -4, 3, 2, 1}) 
-	fmt.Println(result3)// 1
+	
+	fmt.Println(isAnagram("anak", "kana") )// true
+	fmt.Println(isAnagram("anak", "mana"))// false
+	fmt.Println(isAnagram("anagram", "managra") )// true | ini harusnya false 
 
-	a := isAnagram("anak", "kana") 
-	fmt.Println(a)// true
-	b := isAnagram("anak", "mana")
-	fmt.Println(b)// false
-	c := isAnagram("anagram", "managra") 
-	fmt.Println(c)// true | ini harusnya false 
+	
+	fmt.Printf("%c\n", findTheDifference("abcd", "abcde") )// 'e'
+	fmt.Printf("%c\n", findTheDifference("abcd", "abced") )// 'e'
+	fmt.Printf("%c\n", 	findTheDifference("", "y"))/// 'y'
 
-	e := findTheDifference("abcd", "abcde") 
-	fmt.Printf("%c\n", e)// 'e'
-	e_2 := findTheDifference("abcd", "abced") 
-	fmt.Printf("%c\n", e_2)// 'e'
-	y := findTheDifference("", "y")
-	fmt.Printf("%c\n", y)/// 'y'
 
-	t := canMakeArithmeticProgression([]int{1, 5, 3}) 
-	fmt.Println(t)// true; 1, 3, 5 adalah baris aritmatik +2
-	i := canMakeArithmeticProgression([]int{5, 1, 9})  
-	fmt.Println(i)// true; 9, 5, 1 adalah baris aritmatik -4
-	j := canMakeArithmeticProgression([]int{1, 2, 4, 8})
-	fmt.Println(j)// false; 1, 2, 4, 8 bukan baris aritmatik, melainkan geometrik x2
+	fmt.Println(	canMakeArithmeticProgression([]int{1, 5, 3}) )// true; 1, 3, 5 adalah baris aritmatik +2
+	 
+	fmt.Println( canMakeArithmeticProgression([]int{5, 1, 9}) )// true; 9, 5, 1 adalah baris aritmatik -4
 
-	// tesDeck()
+	fmt.Println(canMakeArithmeticProgression([]int{1, 2, 4, 8}))// false; 1, 2, 4, 8 bukan baris aritmatik, melainkan geometrik x2
+
+	tesDeck()
 }
 
 // https://leetcode.com/problems/sign-of-the-product-of-an-array
@@ -113,18 +108,30 @@ type Card struct {
 // assume Ace-Spade on top of deck.
 func (d *Deck) New() {
 	// write code here
+	d.cards = make([]Card, 0, 52)
+	for s := 0; s < 4; s++ {
+		for n := 1; n <= 13; n++ {
+			d.cards = append(d.cards, Card{symbol: s, number: n})
+		}
+	}
 }
 
 // PeekTop return n cards from the top
 func (d Deck) PeekTop(n int) []Card {
 	// write code here
-	return nil
+	if n > len(d.cards) {
+		n = len(d.cards)
+	}
+	return d.cards[:n]
 }
 
 // PeekTop return n cards from the bottom
 func (d Deck) PeekBottom(n int) []Card {
 	// write code here
-	return nil
+	if n > len(d.cards){
+		n = len(d.cards)
+	}
+	return d.cards[len(d.cards) - n:]
 }
 
 // PeekCardAtIndex return a card at specified index
@@ -135,12 +142,17 @@ func (d Deck) PeekCardAtIndex(idx int) Card {
 // Shuffle randomly shuffle the deck
 func (d *Deck) Shuffle() {
 	// write code here
+	rand.Seed(time.Now().UnixNano())
+	rand.Shuffle(len(d.cards), func(i, j int) {
+		d.cards[i], d.cards[j] = d.cards[j], d.cards[i]
+	})
 }
 
 // Cut perform single "Cut" technique. Move n top cards to bottom
 // e.g. Deck: [1, 2, 3, 4, 5]. Cut(3) resulting Deck: [4, 5, 1, 2, 3]
 func (d *Deck) Cut(n int) {
 	// write code here
+	d.cards = append(d.cards[n:], d.cards[:n]...)
 }
 
 func (c Card) ToString() string {
